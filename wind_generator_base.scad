@@ -1,7 +1,7 @@
 $fn=32;
 
 // Which part to render. Choose 1 for top, 2 for bottom, 3 for both
-render_part = 1;
+render_part = 3;
 
 // Render gears - set to true to render gear shape
 render_gears = 0;
@@ -13,7 +13,7 @@ render_motor = 0;
 rod_dia = 10;
 
 // case screws
-case_screw_dia = 5.2;
+case_screw_dia = 4.4;
 
 // case screw indents
 case_screw_indent = 5;
@@ -34,7 +34,7 @@ motor_height = 81;
 motor_frame_height = 10;
 
 // bearing dia
-bearing_dia = 22;
+bearing_dia = 22.4;
 
 // bearing height
 bearing_height = 7;
@@ -68,12 +68,12 @@ case_width = max(motor_dia,gear_rod_dia+4*wall);
 * Render section *
 *****************/
 
-if (render_part == 1 || 3)
+if (render_part == 1 || render_part == 3 )
 {
     part_top();
 }
 
-if (render_part == 2)
+if (render_part == 2 || render_part == 3)
 {
     part_bottom();
 }
@@ -138,7 +138,7 @@ module case()
         // bearing opening
         translate([0,0,case_height/2-bearing_height])
         {
-            #cylinder(d=bearing_dia,h=bearing_height);
+            cylinder(d=bearing_dia,h=bearing_height);
         }
     }
 
@@ -274,7 +274,7 @@ module case_screws()
 }
 
 // case screw holes
-module case_screw_holes()
+module case_screw_holes(fn=6)
 {
     for(i = [1,-1])
     {
@@ -285,9 +285,9 @@ module case_screw_holes()
                 translate([i*(case_length/2-(2*case_screw_dia+wall)/2),0,-case_height/2])
                 {
                     cylinder(h=case_height,d=case_screw_dia);
-                    cylinder(h=case_screw_indent,d=2*case_screw_dia,$fn=6);
+                    cylinder(h=case_screw_indent,d=2*case_screw_dia,$fn=fn);
                     translate([0,0,case_height-case_screw_indent]){
-                        cylinder(h=case_screw_indent,d=2*case_screw_dia);
+                        cylinder(h=case_screw_indent,d=2*case_screw_dia,$fn=fn);
                     }
                 }
             }

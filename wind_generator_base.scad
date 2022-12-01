@@ -1,13 +1,13 @@
 $fn=32;
 
 // Which part to render. Choose 1 for top, 2 for bottom, 3 for both
-render_part = 2;
+render_part = 1;
 
 // Render gears - set to true to render gear shape
-render_gears = 1;
+render_gears = 0;
 
 // Render motor - set to true to render motor shape
-render_motor = 1;
+render_motor = 0;
 
 // rod diameter
 rod_dia = 10;
@@ -22,31 +22,31 @@ case_screw_indent = 5;
 motor_screw_dia = 4;
 
 // motor diameter
-motor_dia = 30;
+motor_dia = 36;
 
 // motor screw distance
 motor_screw_dist = 20;
 
 // motor height
-motor_height = 50;
+motor_height = 81;
 
 // height of frame for motor
 motor_frame_height = 10;
 
 // bearing dia
-bearing_dia = 20;
+bearing_dia = 22;
 
 // bearing height
-bearing_height = 4;
+bearing_height = 7;
 
 // rod gear diameter
-gear_rod_dia = 60;
+gear_rod_dia = 52.3;
 
 // motor gear diameter
-gear_motor_dia = 10;
+gear_motor_dia = 13.9;
 
 // gear height
-gear_height = 5;
+gear_height = 8.1;
 
 // gear overlap
 gear_overlap = 2;
@@ -59,7 +59,7 @@ wall = 4;
 * Calculations *
 ***************/
 
-case_height = gear_height + motor_height + bearing_height + 2*wall;
+case_height = gear_height + motor_height + bearing_height + 3 * wall;
 case_length = gear_rod_dia + gear_motor_dia + motor_dia + 2*wall;
 case_width = max(motor_dia,gear_rod_dia+4*wall);
 
@@ -68,7 +68,7 @@ case_width = max(motor_dia,gear_rod_dia+4*wall);
 * Render section *
 *****************/
 
-if (render_part == 1)
+if (render_part == 1 || 3)
 {
     part_top();
 }
@@ -135,6 +135,11 @@ module case()
         }
         cylinder(d=rod_dia,h=case_height,center=true);
         case_screw_holes();
+        // bearing opening
+        translate([0,0,case_height/2-bearing_height])
+        {
+            #cylinder(d=bearing_dia,h=bearing_height);
+        }
     }
 
     // motor frame
@@ -144,12 +149,26 @@ module case()
     }
 
     // bearing holder top
-    translate([0,0,case_height/2-2*wall])
-    bearing();
+    translate([0,0,case_height/2-bearing_height-wall])
+    {
+        bearing();
+    }
 
-    // bearing holder bottom
-    translate([0,0,-case_height/2+wall])
-    bearing();
+    // bearing holder bottom - motor cutout
+    difference()
+    {
+        translate([0,0,-case_height/2])
+        {
+            bearing();
+        }
+        translate([gear_rod_dia/2+gear_motor_dia/2-gear_overlap,0,-case_height/2+wall])
+        {
+            translate([-(motor_dia+2*wall)/2,-(motor_dia-2*wall)/2,0])
+            {
+                #cube([motor_dia+2*wall,motor_dia-2*wall,motor_frame_height]);
+            }
+        }
+    }
 }
 
 // gears
@@ -208,9 +227,17 @@ module motor_frame()
 
 module bearing()
 {
-    difference(){
-        cylinder(d=bearing_dia+2*wall,h=bearing_height);
-        cylinder(d=bearing_dia,h=bearing_height);
+    translate([0,0,wall]) {
+        difference()
+        {
+            cylinder(d=bearing_dia+2*wall,h=bearing_height);
+            cylinder(d=bearing_dia,h=bearing_height);
+        }
+    }
+    difference()
+    {
+        cylinder(d=bearing_dia+2*wall,h=wall);
+        cylinder(d=rod_dia,h=bearing_height);
     }
 }
 

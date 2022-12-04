@@ -1,7 +1,7 @@
 $fn=32;
 
 // Which part to render. Choose 1 for top, 2 for bottom, 3 for both
-render_part = 3;
+render_part = 1;
 
 // Render gears - set to true to render gear shape
 render_gears = 0;

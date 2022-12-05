@@ -1,7 +1,7 @@
 $fn=32;
 
 // Which part to render. Choose 1 for top, 2 for bottom, 3 for middle, 4 for all parts
-render_part = 3;
+render_part = 1;
 
 // Render walls or leave open
 render_wall = 0;
@@ -281,17 +281,20 @@ module motor_cutout()
     // motor shape
     cylinder(d=motor_dia,h=motor_height);
     // motor screws
-    for(i=[-1,1]) {
-        translate([0,i*motor_screw_dist/2,-wall])
-        {
-            cylinder(d=motor_screw_dia,h=wall);
-            cylinder(d2=motor_screw_dia,d1=2*motor_screw_dia,h=1);
+    rotate([0,0,45])
+    {
+        for(i=[-1,1]) {
+            translate([0,i*motor_screw_dist/2,-wall])
+            {
+                cylinder(d=motor_screw_dia,h=wall);
+                cylinder(d2=motor_screw_dia,d1=2*motor_screw_dia,h=1);
+            }
         }
     }
     // lower cutout for cables
-    translate([-(motor_dia+4)/2,-(motor_screw_dist-motor_screw_dia*2-2)/2,-wall/2])
+    translate([-(motor_dia+4)/2,-(motor_screw_dist-motor_screw_dia*2-4)/2,-wall/2])
     {
-        cube([motor_dia+4,motor_screw_dist-motor_screw_dia*2-2,wall/2]);
+        cube([motor_dia+4,motor_screw_dist-motor_screw_dia*2-4,wall/2]);
     }
 }
 

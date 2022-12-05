@@ -22,7 +22,7 @@ motor_screw_dia = 3.8;
 motor_dia = 28;
 
 // motor screw distance
-motor_screw_dist = 19;
+motor_screw_dist = 16;
 
 // motor height (complete with axle and connector)
 motor_height = 60;
